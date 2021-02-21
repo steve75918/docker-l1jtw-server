@@ -139,7 +139,9 @@ public class L1WeaponSkill {
 		}
 
 		int chance = Random.nextInt(100) + 1;
-		if (weaponSkill.getProbability() < chance) {
+		int probability = weaponSkill.getProbability() + pc.getWeapon().getEnchantLevel();
+
+		if (!(probability > chance)) {
 			return 0;
 		}
 
@@ -264,7 +266,8 @@ public class L1WeaponSkill {
 	public static double getBaphometStaffDamage(L1PcInstance pc, L1Character cha) {
 		double dmg = 0;
 		int chance = Random.nextInt(100) + 1;
-		if (14 >= chance) {
+		int probability = 14 + pc.getWeapon().getEnchantLevel();
+		if (probability >= chance) {
 			int locx = cha.getX();
 			int locy = cha.getY();
 			int sp = pc.getSp();
@@ -286,7 +289,8 @@ public class L1WeaponSkill {
 			L1ItemInstance weapon) {
 		double dmg = 0;
 		int chance = Random.nextInt(100) + 1;
-		if (2 >= chance) {
+		int probability = 2 + pc.getWeapon().getEnchantLevel();
+		if (probability >= chance) {
 			dmg = cha.getCurrentHp() * 2 / 3;
 			if (cha.getCurrentHp() - dmg < 0) {
 				dmg = 0;
@@ -352,11 +356,13 @@ public class L1WeaponSkill {
 		int probability = 0;
 		int attr = 0;
 		int chance = Random.nextInt(100) + 1;
+		int weaponEnchant = pc.getWeapon().getEnchantLevel();
+
 		if (weaponId == 263 || weaponId == 287) { // フリージングランサー
-			probability = 5;
+			probability = 10 + weaponEnchant;
 			attr = L1Skills.ATTR_WATER;
 		} else if (weaponId == 260) { // レイジングウィンド
-			probability = 4;
+			probability = 9 + weaponEnchant;
 			attr = L1Skills.ATTR_WIND;
 		}
 		if (probability >= chance) {
@@ -368,7 +374,7 @@ public class L1WeaponSkill {
 			L1Character areaBase = cha;
 			double damageRate = 0;
 
-			if (weaponId == 263 || weaponId == 290) { // フリージングランサー
+			if (weaponId == 263 || weaponId == 287) { // フリージングランサー
 				area = 3;
 				damageRate = 1.4D;
 				effectTargetId = cha.getId();
@@ -449,7 +455,9 @@ public class L1WeaponSkill {
 	public static double getLightningEdgeDamage(L1PcInstance pc, L1Character cha) {
 		double dmg = 0;
 		int chance = Random.nextInt(100) + 1;
-		if (4 >= chance) {
+		int probability = 12 + pc.getWeapon().getEnchantLevel();
+
+		if (probability >= chance) {
 			int sp = pc.getSp();
 			int intel = pc.getInt();
 			double bsk = 0;
@@ -466,7 +474,7 @@ public class L1WeaponSkill {
 
 	public static void giveArkMageDiseaseEffect(L1PcInstance pc, L1Character cha) {
 		int chance = Random.nextInt(1000) + 1;
-		int probability = (5 - ((cha.getMr() / 10) * 5)) * 10;
+		int probability = (5 - ((cha.getMr() / 10) * 5)) * 10 + pc.getWeapon().getEnchantLevel();
 		if (probability == 0) {
 			probability = 10;
 		}
