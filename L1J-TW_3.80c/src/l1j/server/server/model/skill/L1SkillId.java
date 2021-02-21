@@ -1025,4 +1025,8 @@ public class L1SkillId {
 
 	/** 邪惡蜥蜴冰矛圍籬 **/
 	public static final int ICE_LANCE_BASILISK = 15004;
+
+	// 自定義
+	// 遠程武器專精
+	public static final int WEAPON_EXPERT_RANGE = 21001;
 }
