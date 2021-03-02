@@ -1,16 +1,16 @@
 /**
  *                            License
- * THE WORK (AS DEFINED BELOW) IS PROVIDED UNDER THE TERMS OF THIS  
- * CREATIVE COMMONS PUBLIC LICENSE ("CCPL" OR "LICENSE"). 
- * THE WORK IS PROTECTED BY COPYRIGHT AND/OR OTHER APPLICABLE LAW.  
- * ANY USE OF THE WORK OTHER THAN AS AUTHORIZED UNDER THIS LICENSE OR  
+ * THE WORK (AS DEFINED BELOW) IS PROVIDED UNDER THE TERMS OF THIS
+ * CREATIVE COMMONS PUBLIC LICENSE ("CCPL" OR "LICENSE").
+ * THE WORK IS PROTECTED BY COPYRIGHT AND/OR OTHER APPLICABLE LAW.
+ * ANY USE OF THE WORK OTHER THAN AS AUTHORIZED UNDER THIS LICENSE OR
  * COPYRIGHT LAW IS PROHIBITED.
- * 
- * BY EXERCISING ANY RIGHTS TO THE WORK PROVIDED HERE, YOU ACCEPT AND  
- * AGREE TO BE BOUND BY THE TERMS OF THIS LICENSE. TO THE EXTENT THIS LICENSE  
- * MAY BE CONSIDERED TO BE A CONTRACT, THE LICENSOR GRANTS YOU THE RIGHTS CONTAINED 
+ *
+ * BY EXERCISING ANY RIGHTS TO THE WORK PROVIDED HERE, YOU ACCEPT AND
+ * AGREE TO BE BOUND BY THE TERMS OF THIS LICENSE. TO THE EXTENT THIS LICENSE
+ * MAY BE CONSIDERED TO BE A CONTRACT, THE LICENSOR GRANTS YOU THE RIGHTS CONTAINED
  * HERE IN CONSIDERATION OF YOUR ACCEPTANCE OF SUCH TERMS AND CONDITIONS.
- * 
+ *
  */
 package l1j.server.server.clientpackets;
 
@@ -131,14 +131,14 @@ public class C_ItemUSe extends ClientBasePacket {
 
 	public C_ItemUSe(byte abyte0[], ClientThread client) throws Exception {
 		super(abyte0);
-		
+
 		L1PcInstance pc = client.getActiveChar();
 		if ((pc == null) || pc.isGhost() || pc.isDead()) {
 			return;
 		}
-		
+
 		int itemObjid = readD();
-		
+
 		L1ItemInstance l1iteminstance = pc.getInventory().getItem(itemObjid);
 
 		if (l1iteminstance == null) {
@@ -190,7 +190,7 @@ public class C_ItemUSe extends ClientBasePacket {
 				break;
 			case L1ItemId.SCROLL_OF_ENCHANT_ARMOR: case L1ItemId.SCROLL_OF_ENCHANT_WEAPON:
 			case L1ItemId.SCROLL_OF_ENCHANT_QUEST_WEAPON:
-			case 40077: case 40078: case 40126: case 40098: case 40129: case 40130: case 140129: case 140130: 
+			case 40077: case 40078: case 40126: case 40098: case 40129: case 40130: case 140129: case 140130:
 			case L1ItemId.B_SCROLL_OF_ENCHANT_ARMOR: case L1ItemId.B_SCROLL_OF_ENCHANT_WEAPON:
 			case L1ItemId.C_SCROLL_OF_ENCHANT_ARMOR: case L1ItemId.C_SCROLL_OF_ENCHANT_WEAPON:
 			case 41029: case 40317: case 49188: case 41036: case 41245: case 40127: case 40128: case 41048:
@@ -402,7 +402,7 @@ public class C_ItemUSe extends ClientBasePacket {
 					pc.checkNoviceType();
 				}
 				else if (itemId == 40033) { // エリクサー:腕力
-					if ((pc.getBaseStr() < 35) && (pc.getElixirStats() < 5)) {
+					if ((pc.getBaseStr() < 35) && (pc.getElixirStats() < 15)) {
 						pc.addBaseStr((byte) 1); // 素のSTR値に+1
 						pc.setElixirStats(pc.getElixirStats() + 1);
 						pc.getInventory().removeItem(l1iteminstance, 1);
@@ -414,7 +414,7 @@ public class C_ItemUSe extends ClientBasePacket {
 					}
 				}
 				else if (itemId == 40034) { // エリクサー:体力
-					if ((pc.getBaseCon() < 35) && (pc.getElixirStats() < 5)) {
+					if ((pc.getBaseCon() < 35) && (pc.getElixirStats() < 15)) {
 						pc.addBaseCon((byte) 1); // 素のCON値に+1
 						pc.setElixirStats(pc.getElixirStats() + 1);
 						pc.getInventory().removeItem(l1iteminstance, 1);
@@ -426,7 +426,7 @@ public class C_ItemUSe extends ClientBasePacket {
 					}
 				}
 				else if (itemId == 40035) { // エリクサー:機敏
-					if ((pc.getBaseDex() < 35) && (pc.getElixirStats() < 5)) {
+					if ((pc.getBaseDex() < 35) && (pc.getElixirStats() < 15)) {
 						pc.addBaseDex((byte) 1); // 素のDEX値に+1
 						pc.resetBaseAc();
 						pc.setElixirStats(pc.getElixirStats() + 1);
@@ -439,7 +439,7 @@ public class C_ItemUSe extends ClientBasePacket {
 					}
 				}
 				else if (itemId == 40036) { // エリクサー:知力
-					if ((pc.getBaseInt() < 35) && (pc.getElixirStats() < 5)) {
+					if ((pc.getBaseInt() < 35) && (pc.getElixirStats() < 15)) {
 						pc.addBaseInt((byte) 1); // 素のINT値に+1
 						pc.setElixirStats(pc.getElixirStats() + 1);
 						pc.getInventory().removeItem(l1iteminstance, 1);
@@ -451,7 +451,7 @@ public class C_ItemUSe extends ClientBasePacket {
 					}
 				}
 				else if (itemId == 40037) { // エリクサー:精神
-					if ((pc.getBaseWis() < 35) && (pc.getElixirStats() < 5)) {
+					if ((pc.getBaseWis() < 35) && (pc.getElixirStats() < 15)) {
 						pc.addBaseWis((byte) 1); // 素のWIS値に+1
 						pc.resetBaseMr();
 						pc.setElixirStats(pc.getElixirStats() + 1);
@@ -464,7 +464,7 @@ public class C_ItemUSe extends ClientBasePacket {
 					}
 				}
 				else if (itemId == 40038) { // エリクサー:魅力
-					if ((pc.getBaseCha() < 35) && (pc.getElixirStats() < 5)) {
+					if ((pc.getBaseCha() < 35) && (pc.getElixirStats() < 15)) {
 						pc.addBaseCha((byte) 1); // 素のCHA値に+1
 						pc.setElixirStats(pc.getElixirStats() + 1);
 						pc.getInventory().removeItem(l1iteminstance, 1);
@@ -1586,7 +1586,7 @@ public class C_ItemUSe extends ClientBasePacket {
 									}
 								}
 							}
-							
+
 							L1Teleport.teleport(pc, newX, newY, mapId, 5, true);
 							// 卷軸傳送後 使用物品延遲完才解開停止狀態
 							L1ItemDelay.teleportUnlock(pc, l1iteminstance);
@@ -1687,7 +1687,7 @@ public class C_ItemUSe extends ClientBasePacket {
 					else {
 						pc.sendPackets(new S_ServerMessage(79)); // \f1沒有任何事情發生。
 					}
-				}			
+				}
 				else if (itemId == 49178) { // 希蓮恩的護身符
 					if ((pc.isIllusionist()) && (pc.getMapId() == 2004) && (pc.getQuest().get_step(L1Quest.QUEST_LEVEL50) > 1 )) {
 						short mapid = 1000;
@@ -1697,7 +1697,7 @@ public class C_ItemUSe extends ClientBasePacket {
 					else {
 						pc.sendPackets(new S_ServerMessage(79)); // \f1沒有任何事情發生。
 					}
-				}			
+				}
 				else if (itemId == 49216) { // 普洛凱爾的護身符
 					if ((pc.isDragonKnight()) && (pc.getMapId() == 2004) && (pc.getQuest().get_step(L1Quest.QUEST_LEVEL50) > 1 )) {
 						short mapid = 1001;
@@ -1707,7 +1707,7 @@ public class C_ItemUSe extends ClientBasePacket {
 					else {
 						pc.sendPackets(new S_ServerMessage(79)); // \f1沒有任何事情發生。
 					}
-				}			
+				}
 				else if (itemId == 49165) { // 聖殿2樓鑰匙
 					if (pc.getQuest().get_step(L1Quest.QUEST_LEVEL50) > 0) {
 						if (pc.isCrown() && (pc.getMapId() == 2000)) {
@@ -1732,7 +1732,7 @@ public class C_ItemUSe extends ClientBasePacket {
 					} else {
 						pc.sendPackets(new S_ServerMessage(79)); // \f1沒有任何事情發生。
 					}
-				}			
+				}
 				else if (itemId == 49166) { // 聖殿3樓鑰匙
 					if (pc.getQuest().get_step(L1Quest.QUEST_LEVEL50) > 0) {
 						if (pc.isCrown() && (pc.getMapId() == 2000)) {
@@ -1753,11 +1753,11 @@ public class C_ItemUSe extends ClientBasePacket {
 							pc.getInventory().removeItem(l1iteminstance, 1);
 						} else {
 							pc.sendPackets(new S_ServerMessage(79)); // \f1沒有任何事情發生。
-						} 
+						}
 					} else {
 						pc.sendPackets(new S_ServerMessage(79)); // \f1沒有任何事情發生。
 					}
-				}			
+				}
 				else if (itemId == 49239) { // 消滅之意志
 					if (pc.getQuest().get_step(L1Quest.QUEST_LEVEL50) > 0 ) {
 						if (pc.isCrown() && (pc.getMapId() == 2000)) {
@@ -1782,7 +1782,7 @@ public class C_ItemUSe extends ClientBasePacket {
 					} else {
 						pc.sendPackets(new S_ServerMessage(79)); // \f1沒有任何事情發生。
 					}
-				}			
+				}
 				else if (itemId == 40566) { // ミステリアス シェル
 					if (pc.isElf()
 							&& ((pc.getX() >= 33971) && // 象牙の塔の村の南にある魔方陣の座標
@@ -2854,7 +2854,7 @@ public class C_ItemUSe extends ClientBasePacket {
 					pc.getInventory().removeItem(l1iteminstance, 1);
 				}
 				else if (itemId == 49222) { // 妖魔密使之笛子
-					if (pc.isDragonKnight() && (pc.getMapId() == 61)) { 
+					if (pc.isDragonKnight() && (pc.getMapId() == 61)) {
 						boolean found = false;
 						for (L1Object obj : L1World.getInstance().getObject()) {
 							if (obj instanceof L1MonsterInstance) {
@@ -3059,7 +3059,7 @@ public class C_ItemUSe extends ClientBasePacket {
 						}
 					} else {
 						pc.sendPackets(new S_ServerMessage(79)); // \f1沒有任何事情發生。
-					} 
+					}
 					pc.getInventory().consumeItem(49167, 1);
 				}
 				else if (itemId == 47010) { // 龍之鑰匙
