@@ -819,8 +819,8 @@ public class L1Attack {
             int lastHp       = 0;
 
             if (probability >= chance) {
-                stunDuration = 750;
-                damage = target.getMaxHp() * 2 / 100;
+                stunDuration = 1000;
+                damage = target.getMaxHp() * 3 / 100;
 
                 if (target instanceof L1PcInstance) {
                     L1PcInstance pc = (L1PcInstance) target;
@@ -895,14 +895,18 @@ public class L1Attack {
             if (_arrow != null) {
                 add_dmg = _arrow.getItem().getDmgSmall();
                 if (_calcType == PC_NPC) {
-                    if (_targetNpc.getNpcTemplate().get_size()
-                            .equalsIgnoreCase("large"))
+                    if (_targetNpc.getNpcTemplate().get_size().equalsIgnoreCase("large")) {
                         add_dmg = _arrow.getItem().getDmgLarge();
-                    if (_targetNpc.getNpcTemplate().is_hard())
+                    }
+
+                    if (_targetNpc.getNpcTemplate().is_hard()) {
                         add_dmg /= 2;
+                    }
                 }
-            } else if (_weaponId == 190)  // 沙哈之弓
-                add_dmg = 15;
+            } else if (_weaponId == 190) {
+                // 沙哈之弓
+                add_dmg = calcMagicArrowDmg();
+            }
         } else if (_weaponType == 62) { // 鐵手甲
             add_dmg = _sting.getItem().getDmgSmall();
             if (_calcType == PC_NPC)
@@ -1090,10 +1094,11 @@ public class L1Attack {
 
         // 計算傷害 遠程 或 近戰武器 及buff
         double dmg = weaponTotalDamage + _statusDamage;
-        if (_weaponType == 20 || _weaponType == 62)
+        if (_weaponType == 20 || _weaponType == 62) {
             dmg = calLongRageDamage(dmg);
-        else
+        } else {
             dmg = calShortRageDamage(dmg);
+        }
 
         if (_weaponId == 124 || _weaponId == 289 || _weaponId == 290
                 || _weaponId == 291 || _weaponId == 292 || _weaponId == 293
@@ -1549,11 +1554,21 @@ public class L1Attack {
         }
     }
 
-
     // ■■■■ 攻擊吸血計算 基於實際傷害值 ■■■■
-    public double calcDrainHp(int rate) {
+    public double calcDrainHp(int rate)
+    {
         double value = (_damage) / 10 * Math.min(rate, 10);
         return (value > 0) ? value : 0;
+    }
+
+    // 計算魔法箭傷害 - 沙哈弓
+    public int calcMagicArrowDmg()
+    {
+        int dmg = 15;
+
+        dmg += _target.getCurrentHp() * 1 / 100;
+
+        return dmg;
     }
 
     /* ■■■■■■■■■■■■■■ 攻撃モーション送信 ■■■■■■■■■■■■■■ */
