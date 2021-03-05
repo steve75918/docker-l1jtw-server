@@ -14,6 +14,7 @@
  */
 package l1j.server.server.model;
 
+import java.util.Arrays;
 import l1j.server.Config;
 import l1j.server.server.ActionCodes;
 import l1j.server.server.WarTimeController;
@@ -797,15 +798,6 @@ public class L1Attack {
             _damage = calcNpcNpcDamage();
         }
 
-        // 超過安定值獲得吸血效果
-        if (_weaponSafeEnchant >= 0) {
-            int riskEnchant = _weaponEnchant - _weaponSafeEnchant;
-
-            if (riskEnchant > 0) {
-                _drainHp += calcDrainHp(riskEnchant);
-            }
-        }
-
         return _damage;
     }
 
@@ -837,11 +829,22 @@ public class L1Attack {
                     lastHp = npc.getCurrentHp();
                 }
 
-                String msg = "發動武器專精 造成 " + String.valueOf(damage) + " 傷害，剩餘 " + String.valueOf(lastHp);
+                String msg = "發動武器專精 造成 " + String.valueOf(damage) + " 傷害，剩餘 " + String.valueOf(Math.max(lastHp, 0));
 
                 L1EffectSpawn.getInstance().spawnEffect(81162, stunDuration, target.getX(), target.getY(), target.getMapId());
                 attacker.sendPackets(new S_ServerMessage(166, msg));
             }
+        }
+
+        return ;
+    }
+
+    private void triggerIgnoreArmorSkill(L1PcInstance attacker, L1Character target)
+    {
+        // 2014 punkim effect
+        Integer[] punkimWeapons = {200172, 200173, 200174, 200175, 200176, 200177, 200178};
+        if (Arrays.asList(punkimWeapons).contains(_weaponId)) {
+            _damage += L1WeaponSkill.getPunkimDamage2014(attacker, target);;
         }
 
         return ;
@@ -1555,10 +1558,16 @@ public class L1Attack {
     }
 
     // ■■■■ 攻擊吸血計算 基於實際傷害值 ■■■■
-    public double calcDrainHp(int rate)
+    public double calcDrainHp()
     {
-        double value = (_damage) / 10 * Math.min(rate, 10);
-        return (value > 0) ? value : 0;
+        int rate     = _weaponEnchant - _weaponSafeEnchant;
+        double value = 0;
+
+        if (rate > 0) {
+            value = (_damage) / 20 * Math.min(rate, 10);
+        }
+
+        return value;
     }
 
     // 計算魔法箭傷害 - 沙哈弓
@@ -1729,8 +1738,16 @@ public class L1Attack {
 
     /* ■■■■■■■■■■■■■■■ 計算結果反映 ■■■■■■■■■■■■■■■ */
 
-    public void commit() {
+    public void commit()
+    {
         if (_isHit) {
+            triggerIgnoreArmorSkill(_pc, _target);
+
+            // 超過安定值獲得吸血效果
+            if (_weaponSafeEnchant >= 0) {
+                _drainHp += calcDrainHp();
+            }
+
             if ((_calcType == PC_PC) || (_calcType == NPC_PC)) {
                 commitPc();
             } else if ((_calcType == PC_NPC) || (_calcType == NPC_NPC)) {
