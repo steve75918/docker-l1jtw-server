@@ -801,17 +801,64 @@ public class L1Attack {
         return _damage;
     }
 
+    private double triggerWeaponSkill(L1PcInstance attacker, L1Character target)
+    {
+        int weaponId = _weaponId;
+        double dmg   = 0;
+
+        // 地裂（耀武系列）
+        Integer[] baphomeWeapons         = {124, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300, 301, 302, 303};
+        // 骰子匕首
+        Integer[] diceWeapons            = {2, 200002};
+        // 定身（深紅之弩）
+        Integer[] fettersWeapons         = {204, 100204};
+        // 極道落雷（雷雨）
+        Integer[] lightningWeapons       = {264, 288};
+        // 範圍性法術
+        Integer[] aoeWeapons             = {260, 263, 287};
+        // 毒杖
+        Integer[] diseaseWeapons         = {261};
+        // 致命落雷（聖晶）
+        Integer[] deadlylightningWeapons = {134};
+
+        if (Arrays.asList(baphomeWeapons).contains(weaponId)) {
+            dmg += L1WeaponSkill.getBaphometStaffDamage(attacker, target);
+        } else if (Arrays.asList(diceWeapons).contains(weaponId)) {
+            dmg += L1WeaponSkill.getDiceDaggerDamage(attacker, target, weapon);
+        } else if (Arrays.asList(fettersWeapons).contains(weaponId)) {
+            L1WeaponSkill.giveFettersEffect(attacker, target);
+        } else if (Arrays.asList(lightningWeapons).contains(weaponId)) {
+            dmg += L1WeaponSkill.getLightningEdgeDamage(attacker, target);
+        } else if (Arrays.asList(aoeWeapons).contains(weaponId)) {
+            dmg += L1WeaponSkill.getAreaSkillWeaponDamage(attacker, target, weaponId);
+        } else if (Arrays.asList(diseaseWeapons).contains(weaponId)) {
+            L1WeaponSkill.giveArkMageDiseaseEffect(attacker, target);
+        } else if (Arrays.asList(deadlylightningWeapons).contains(weaponId)) {
+            dmg += L1WeaponSkill.getDeadlyLightningEdgeDamage(attacker, target);
+        } else {
+            dmg += L1WeaponSkill.getWeaponSkillDamage(_pc, _target, _weaponId);
+        }
+
+        return dmg;
+    }
+
     private void triggerPassiveSkill(L1PcInstance attacker, L1Character target)
     {
         if (attacker.isSkillMastery(WEAPON_EXPERT_RANGE)) {
             int probability  = (attacker.getLevel() / 10) + 1;
+
+            // 75 級以上，每 5 級額外 1 %
+            if (attacker.getLevel() >= 75) {
+                probability += ((attacker.getLevel() - 75) / 5) + 1;
+            }
+
             int chance       = Random.nextInt(100) + 1;
             int damage       = 0;
             int stunDuration = 0;
             int lastHp       = 0;
 
             if (probability >= chance) {
-                stunDuration = 1000;
+                stunDuration = 1250;
                 damage = target.getMaxHp() * 3 / 100;
 
                 if (target instanceof L1PcInstance) {
@@ -839,7 +886,7 @@ public class L1Attack {
         return ;
     }
 
-    private void triggerIgnoreArmorSkill(L1PcInstance attacker, L1Character target)
+    private void triggerWeaponSkillIgnoreArmor(L1PcInstance attacker, L1Character target)
     {
         // 2014 punkim effect
         Integer[] punkimWeapons = {200172, 200173, 200174, 200175, 200176, 200177, 200178};
@@ -972,27 +1019,8 @@ public class L1Attack {
         else
             dmg = calShortRageDamage(dmg);
 
-        if (_weaponId == 124 || _weaponId == 289 || _weaponId == 290
-                || _weaponId == 291 || _weaponId == 292 || _weaponId == 293
-                || _weaponId == 294 || _weaponId == 295 || _weaponId == 296
-                || _weaponId == 297 || _weaponId == 298 || _weaponId == 299
-                || _weaponId == 300 || _weaponId == 301 || _weaponId == 302
-                || _weaponId == 303) { // バフォメットスタッフ
-            dmg += L1WeaponSkill.getBaphometStaffDamage(_pc, _target);
-        } else if (_weaponId == 2 || _weaponId == 200002) { // ダイスダガー
-            dmg += L1WeaponSkill.getDiceDaggerDamage(_pc, _targetPc, weapon);
-        } else if (_weaponId == 204 || _weaponId == 100204) { // 真紅のクロスボウ
-            L1WeaponSkill.giveFettersEffect(_pc, _targetPc);
-        } else if (_weaponId == 264 || _weaponId == 288) { // ライトニングエッジ
-            dmg += L1WeaponSkill.getLightningEdgeDamage(_pc, _target);
-        } else if (_weaponId == 260 || _weaponId == 263 || _weaponId == 287) { // レイジングウィンド、フリージングランサー
-            dmg += L1WeaponSkill.getAreaSkillWeaponDamage(_pc, _target,
-                    _weaponId);
-        } else if (_weaponId == 261) { // アークメイジスタッフ
-            L1WeaponSkill.giveArkMageDiseaseEffect(_pc, _target);
-        } else {
-            dmg += L1WeaponSkill.getWeaponSkillDamage(_pc, _target, _weaponId);
-        }
+        // 計算武器技能傷害
+        dmg += triggerWeaponSkill(_pc, _target);
 
         dmg -= _targetPc.getDamageReductionByArmor(); // 防具によるダメージ軽減
 
@@ -1103,28 +1131,8 @@ public class L1Attack {
             dmg = calShortRageDamage(dmg);
         }
 
-        if (_weaponId == 124 || _weaponId == 289 || _weaponId == 290
-                || _weaponId == 291 || _weaponId == 292 || _weaponId == 293
-                || _weaponId == 294 || _weaponId == 295 || _weaponId == 296
-                || _weaponId == 297 || _weaponId == 298 || _weaponId == 299
-                || _weaponId == 300 || _weaponId == 301 || _weaponId == 302
-                || _weaponId == 303) {
-            dmg += L1WeaponSkill.getBaphometStaffDamage(_pc, _target);
-        } else if ((_weaponId == 2) || (_weaponId == 200002)) { // ダイスダガー
-            dmg += L1WeaponSkill.getDiceDaggerDamage(_pc, _targetNpc, weapon);
-        } else if ((_weaponId == 204) || (_weaponId == 100204)) { // 真紅のクロスボウ
-            L1WeaponSkill.giveFettersEffect(_pc, _targetNpc);
-        //} else if (_weaponId == 264 || _weaponId == 291) { // ライトニングエッジ
-        } else if (_weaponId == 264 || _weaponId == 288) { // ライトニングエッジ, 天雷劍能發動的修正
-            dmg += L1WeaponSkill.getLightningEdgeDamage(_pc, _target);
-        } else if ((_weaponId == 260) || (_weaponId == 263 || _weaponId == 287)) { // レイジングウィンド、フリージングランサー
-            dmg += L1WeaponSkill.getAreaSkillWeaponDamage(_pc, _target,
-                    _weaponId);
-        } else if (_weaponId == 261) { // アークメイジスタッフ
-            L1WeaponSkill.giveArkMageDiseaseEffect(_pc, _target);
-        } else {
-            dmg += L1WeaponSkill.getWeaponSkillDamage(_pc, _target, _weaponId);
-        }
+        // 計算武器技能傷害
+        dmg += triggerWeaponSkill(_pc, _target);
 
         dmg -= calcNpcDamageReduction();
 
@@ -1741,7 +1749,7 @@ public class L1Attack {
     public void commit()
     {
         if (_isHit) {
-            triggerIgnoreArmorSkill(_pc, _target);
+            triggerWeaponSkillIgnoreArmor(_pc, _target);
 
             // 超過安定值獲得吸血效果
             if (_weaponSafeEnchant >= 0) {

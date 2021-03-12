@@ -472,6 +472,37 @@ public class L1WeaponSkill {
         return calcDamageReduction(pc, cha, dmg, L1Skills.ATTR_WIND);
     }
 
+    public static double getDeadlyLightningEdgeDamage(L1PcInstance pc, L1Character cha) {
+        double dmg = 0;
+        int chance = Random.nextInt(100) + 1;
+        int probability = 7 + pc.getWeapon().getEnchantLevel();
+
+        if (probability >= chance) {
+            // 傷害計算
+            int sp     = pc.getSp();
+            int intel  = pc.getInt();
+            double bsk = 0;
+            double damageRate = 2.2D;
+
+            if (pc.hasSkillEffect(BERSERKERS)) {
+                bsk = 0.2;
+            }
+
+            dmg = (intel + sp) * (damageRate + bsk) + Random.nextInt(intel + sp) * damageRate;
+
+            int locx = cha.getX();
+            int locy = cha.getY();
+
+            S_EffectLocation packet = new S_EffectLocation(locx, locy, 4842);
+
+            // 畫面效果
+            pc.sendPackets(packet);
+            pc.broadcastPacket(packet);
+        }
+
+        return calcDamageReduction(pc, cha, dmg, L1Skills.ATTR_WIND);
+    }
+
     public static void giveArkMageDiseaseEffect(L1PcInstance pc, L1Character cha) {
         int chance = Random.nextInt(1000) + 1;
         int probability = (5 - ((cha.getMr() / 10) * 5)) * 10 + pc.getWeapon().getEnchantLevel();
@@ -518,6 +549,7 @@ public class L1WeaponSkill {
         double dmg = 0;
         int chance = Random.nextInt(100) + 1;
         int probability = 5 + (pc.getWeapon().getEnchantLevel() * 2);
+
         if (probability >= chance) {
             int locx = cha.getX();
             int locy = cha.getY();
