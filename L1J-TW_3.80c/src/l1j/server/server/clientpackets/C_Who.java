@@ -29,37 +29,35 @@ import l1j.server.server.serverpackets.S_WhoCharinfo;
  */
 public class C_Who extends ClientBasePacket {
 
-	private static final String C_WHO = "[C] C_Who";
+    private static final String C_WHO = "[C] C_Who";
 
-	public C_Who(byte[] decrypt, ClientThread client) {
-		super(decrypt);
-		
-		L1PcInstance pc = client.getActiveChar();
-		if (pc == null) {
-			return;
-		}
-		
-		String s = readS();
-		L1PcInstance find = L1World.getInstance().getPlayer(s);
-		
+    public C_Who(byte[] decrypt, ClientThread client) {
+        super(decrypt);
 
-		if (find != null) {
-			S_WhoCharinfo s_whocharinfo = new S_WhoCharinfo(find);
-			pc.sendPackets(s_whocharinfo);
-		}
-		else {
-			if (Config.ALT_WHO_COMMAND) {
-				String amount = String.valueOf(L1World.getInstance().getAllPlayers().size());
-				S_WhoAmount s_whoamount = new S_WhoAmount(amount);
-				pc.sendPackets(s_whoamount);
-			}
-			// TODO: ChrisLiu: SystemMessage 109
-			// 顯示消息如果目標是不存在？正方修知道，謝謝你。
-		}
-	}
+        L1PcInstance pc = client.getActiveChar();
+        if (pc == null) {
+            return;
+        }
 
-	@Override
-	public String getType() {
-		return C_WHO;
-	}
+        String s = readS();
+        L1PcInstance find = L1World.getInstance().getPlayer(s);
+
+        if (find != null) {
+            S_WhoCharinfo s_whocharinfo = new S_WhoCharinfo(find);
+            pc.sendPackets(s_whocharinfo);
+        } else {
+            if (Config.ALT_WHO_COMMAND) {
+                String amount = String.valueOf(L1World.getInstance().getAllPlayers().size());
+                S_WhoAmount s_whoamount = new S_WhoAmount(amount);
+                pc.sendPackets(s_whoamount);
+            }
+            // TODO: ChrisLiu: SystemMessage 109
+            // 顯示消息如果目標是不存在？正方修知道，謝謝你。
+        }
+    }
+
+    @Override
+    public String getType() {
+        return C_WHO;
+    }
 }
