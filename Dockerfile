@@ -2,7 +2,7 @@ FROM openjdk:8-jdk-alpine AS dev
 
 # compilation tools
 RUN apk update && \
-    apk add build-base gcc
+    apk add build-base gcc apache-ant
 
 FROM openjdk:8-jre-alpine AS base
 
